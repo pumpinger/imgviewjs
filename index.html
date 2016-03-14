@@ -5,21 +5,35 @@
     <title>图片插件</title>
     <script type="text/javascript" src="jquery-2.1.4.js"></script>
     <script type="text/javascript" src="imgview.js"></script>
+    <style>
+        .imgView img {width: 200px;}
+    </style>
 </head>
 <body>
 
+<div class="imgView">
+    <img class="imgView_item" src="./img/1.jpg" />
+    <img class="imgView_item" src="./img/2.jpg" />
+    <img class="imgView_item" src="./img/3.jpg" />
+</div>
+
+<button class="button">按钮</button>
+
 
 <script type="text/javascript">
-    $.imgView({
-        imgs:[
-            'img/1.jpg',
-            'img/2.jpg',
-            'img/3.jpg',
-            'img/4.jpg',
-            'img/5.jpg',
-            'img/6.jpg'
-        ]
+    $('.button').click(function (){
+        $.imgView({
+            imgs:[
+                'img/1.jpg',
+                'img/2.jpg',
+                'img/3.jpg',
+                'img/4.jpg',
+                'img/5.jpg',
+                'img/6.jpg'
+            ]
+        });
     });
+
 </script>
 </body>
 </html>

@@ -47,8 +47,8 @@
 //                showHeight=image.height;
 //                showWidth=image.width;
 //            }
-            showHeight=img.height();
-            showWidth=img.width();
+        showHeight=img.height();
+        showWidth=img.width();
     }
 
     function dragImg(e){
@@ -283,7 +283,6 @@
             'margin':'10px',
             'cursor':'pointer',
             'background':'url("./imgview.png")',
-
             'background-position':'-186px -60px'
         });
 
@@ -295,7 +294,6 @@
             'margin':'10px',
             'cursor':'pointer',
             'background':'url("./imgview.png")',
-
             'background-position':'-197px -81px'
         });
 
@@ -307,7 +305,6 @@
             'margin':'10px',
             'cursor':'pointer',
             'background':'url("./imgview.png")',
-
             'background-position':'-221px -38px'
         });
 
@@ -322,7 +319,6 @@
             'top':'48%',
             'cursor':'pointer',
             'background':'url("./imgview.png")',
-
             'background-position':'-115px -2px'
         });
 
@@ -336,7 +332,6 @@
             'right':'1%',
             'top':'48%',
             'background':'url("./imgview.png")',
-
             'background-position':'-115px -47px'
         });
 
@@ -350,7 +345,6 @@
             'right':'0',
             'top':'0',
             'background':'url("./imgview.png")',
-
             'background-position':'-235px -96px'
         });
 
@@ -382,7 +376,6 @@
         weight=1;
         fnRotateScale(img[0],rotate=0);
     }
-
     var _is_init = false;
     function init(){
         if(!_is_init){
@@ -393,42 +386,6 @@
     }
 
 
-
-    //自己定义显示哪些图片
-    $.extend({
-        imgView: function(option) {
-            init();
-            dealOption(option);
-            showImg(index=0);
-        }
-    });
-
-
-    function dealOption(option){
-        imgs=option.imgs;
-        zIndex=option.zIndex||2000;
-        infoDom=option.infoDom;
-        if(infoDom=option.infoDom){
-            detail.show();
-            detail.html(infoDom);
-            $(infoDom).show();
-            view.css('width','70%');
-        }
-        onSwitch=option.onSwitch||function(){};
-    }
-
-
-
-
-    //自动定义
-    $('body').on('click','.imgView .imgView_item',function (){
-        init();
-        imgs = [];
-        $.each($(this).parent().children(),function (i){
-            imgs[i]=$(this).attr('imgViewSrc');
-        });
-        showImg(index=$(this).index());
-    });
 
     //应该是load img   load完了应该才是 showimg
     function showImg(index){
@@ -464,8 +421,6 @@
     }
 
 
-
-
     function fnRotateScale(dom, angle, scale) {
         if (dom && dom.nodeType === 1) {
             angle = parseFloat(angle) || 0;
@@ -483,5 +438,40 @@
             }
         }
     }
+
+
+
+    //自己定义显示哪些图片
+    $.extend({
+        imgView: function(option) {
+            init();
+            imgs=option.imgs;
+            zIndex=option.zIndex||2000;
+            infoDom=option.infoDom;
+            if(infoDom){
+                detail.show();
+                detail.html(infoDom);
+                $(infoDom).show();
+                view.css('width','70%');
+            }
+            onSwitch=option.onSwitch||function(){};
+            showImg(index=0);
+        }
+    });
+
+    //自动定义
+    $('body').on('click','.imgView .imgView_item',function (){
+        alert(1);
+
+
+        init();
+        imgs = [];
+        $.each($(this).parent().children(),function (i){
+            imgs[i]=$(this).attr('imgViewSrc');
+        });
+        showImg(index=$(this).index());
+    });
+
+
 
 });
