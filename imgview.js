@@ -9,15 +9,15 @@
         factory(jQuery);
     }
 })(function($){
-    var global,dialog,view,view_ctrl,ctrl_right,ctrl_left,detail,close_view;
+    var global,dialog,view,view_ctrl,ctrl_right,ctrl_left,ctrl_close,detail;
     var ctrl_magnify,ctrl_shrink,ctrl_rotate,ctrl_recover;   //放大缩小旋转回复 按钮
 
     var loading;   //等待图片
-    var img;   //imgDom
+    var imgDom;   //imgDom
     var showWidth,showHeight;   //图像在view 中显示的宽高
     var imgs=[];   //要显示的图像们
     var infoDom;  //要显示的信息
-    var image = new Image(); //用来加载图片的对象
+    var imageObj = new Image(); //用来加载图片的对象
     var index=1;   //展示第几个图片
     var maxWeight; //图片最大放大系数  //由于图片可能一show 就被缩小了  而我们的放大系数是针对原图大小
     var weight=1;  //图片放大缩小系数
@@ -31,7 +31,7 @@
 
 
     function calcuImgTop(){
-        var offset=view.height()-img.height();
+        var offset=view.height()-imgDom.height();
         return offset/2;
     }
 
@@ -47,28 +47,28 @@
 //                showHeight=image.height;
 //                showWidth=image.width;
 //            }
-        showHeight=img.height();
-        showWidth=img.width();
+        showHeight=imgDom.height();
+        showWidth=imgDom.width();
     }
 
     function dragImg(e){
         var offsetY = startY -e.pageY;
         var offsetX = startX -e.pageX;
 
-        img.css('margin-top',-offsetY);
-        img.css('margin-left',-offsetX);
+        imgDom.css('margin-top',-offsetY);
+        imgDom.css('margin-left',-offsetX);
     }
 
     function bindEVent(){
         //图片读取
-        image.onload = function(){
-            img.show();
+        imageObj.onload = function(){
+            imgDom.show();
             loading.hide();
-            img.prop('src',image.src);
-            img.css({
+            imgDom.prop('src',imageObj.src);
+            imgDom.css({
                 'margin-top':calcuImgTop()
             });
-            maxWeight=(image.width/img.width())*1.5;
+            maxWeight=(imageObj.width/imgDom.width())*1.5;
             calcuImgWH();
         };
 
@@ -77,26 +77,26 @@
             if(isNotMove){
                 if(this=== e.target){
                     $(this).hide();
-                    image.src="";
+                    imageObj.src="";
 
                 }
             }
         });
-        close_view.click(function (e){
+        ctrl_close.click(function (e){
             if(isNotMove){
                 if(this=== e.target){
                     global.hide();
-                    image.src="";
+                    imageObj.src="";
 
                 }
             }
         });
 
         //拖拽
-        img.bind('mousedown',function (e){
+        imgDom.bind('mousedown',function (e){
             e.preventDefault();
-            startX=e.pageX-parseInt(img.css('margin-left'));
-            startY=e.pageY-parseInt(img.css('margin-top'));
+            startX=e.pageX-parseInt(imgDom.css('margin-left'));
+            startY=e.pageY-parseInt(imgDom.css('margin-top'));
             $(document).bind('mousemove',function (e){
                 e.preventDefault();
                 $('body').css('cursor','move');
@@ -118,7 +118,7 @@
 
 
         //切换
-        img.click(function (e){
+        imgDom.click(function (e){
             if(isNotMove){
                 if(!showImg(++index)){
                     index--;
@@ -144,7 +144,7 @@
         });
 
 
-        img.bind('mousewheel', function(event) {
+        imgDom.bind('mousewheel', function(event) {
             event.preventDefault();
             if(event.deltaY===1){
                 if(weight<maxWeight){
@@ -184,18 +184,18 @@
         });
 
         ctrl_rotate.click(function (){
-            fnRotateScale(img[0],rotate+=90);
+            fnRotateScale(imgDom[0],rotate+=90);
         });
 
 
     }
 
     function handlerImgScale(){
-        img.css('width',showWidth*weight);
-        img.css('height',showHeight*weight);
-        img.css('max-width','none');
-        img.css('max-height','none');
-        img.css('margin-top',calcuImgTop());
+        imgDom.css('width',showWidth*weight);
+        imgDom.css('height',showHeight*weight);
+        imgDom.css('max-width','none');
+        imgDom.css('max-height','none');
+        imgDom.css('margin-top',calcuImgTop());
     }
 
 
@@ -217,6 +217,7 @@
         dialog=$('<div>').appendTo(global);
         dialog.css({
             'width':'70%',
+            'position':'relative',
             'min-width':'500px',
             'margin':'0% auto',
             'padding':'10px 0',
@@ -240,6 +241,7 @@
             'background':'#000',
             'width':'100%',
             'padding':'1% 1% 50px 1%',
+            'box-sizing':'border-box',
             'overflow':'hidden',
             'height':'100%',
             'user-select':'none',
@@ -250,15 +252,16 @@
 
 
 
-        img=$('<img>').appendTo(view);
-        img.css({
-            'transition':'transform 0.5s'
+        imgDom=$('<img>').appendTo(view);
+        imgDom.css({
+            'transition':'transform 0.5s',
+            'cursor':'pointer'
         });
 
         view_ctrl=$('<div>').appendTo(view);
         view_ctrl.css({
             'position':'absolute',
-            'bottom':'0',
+            'bottom':'5px',
             'background':'#000',
             'width':'98%'
         });
@@ -268,11 +271,10 @@
         ctrl_recover.css({
             'display':'inline-block',
             'width':'22px',
-            'height':'20px',
+            'height':'19px',
             'margin':'10px',
             'cursor':'pointer',
-            'background':'url("./imgview.png")',
-            'background-position':'-199px -140px'
+            'background':'url("./images/square.png") no-repeat'
         });
 
         ctrl_magnify=$('<span>').appendTo(view_ctrl);
@@ -282,19 +284,17 @@
             'height':'20px',
             'margin':'10px',
             'cursor':'pointer',
-            'background':'url("./imgview.png")',
-            'background-position':'-186px -60px'
+            'background':'url("./images/enlarge.png") no-repeat'
         });
 
         ctrl_shrink=$('<span>').appendTo(view_ctrl);
         ctrl_shrink.css({
             'display':'inline-block',
-            'width':'22px',
+            'width':'21px',
             'height':'20px',
             'margin':'10px',
             'cursor':'pointer',
-            'background':'url("./imgview.png")',
-            'background-position':'-197px -81px'
+            'background':'url("./images/narrow.png") no-repeat'
         });
 
         ctrl_rotate=$('<span>').appendTo(view_ctrl);
@@ -304,8 +304,7 @@
             'height':'20px',
             'margin':'10px',
             'cursor':'pointer',
-            'background':'url("./imgview.png")',
-            'background-position':'-221px -38px'
+            'background':'url("./images/Refresh_1.png") no-repeat'
         });
 
 
@@ -313,39 +312,36 @@
         ctrl_left.css({
             'display':'inline-block',
             'position':'absolute',
-            'width':'23px',
-            'height':'40px',
+            'width':'25px',
+            'height':'43px',
             'left':'1%',
             'top':'48%',
             'cursor':'pointer',
-            'background':'url("./imgview.png")',
-            'background-position':'-115px -2px'
+            'background':'url("./images/Left.png") no-repeat'
         });
 
         ctrl_right=$('<span>').appendTo(view);
         ctrl_right.css({
             'display':'inline-block',
             'position':'absolute',
-            'width':'23px',
-            'height':'40px',
+            'width':'25px',
+            'height':'43px',
             'cursor':'pointer',
             'right':'1%',
             'top':'48%',
-            'background':'url("./imgview.png")',
-            'background-position':'-115px -47px'
+            'background':'url("./images/right.png") no-repeat'
         });
 
-        close_view=$('<span>').appendTo(view);
-        close_view.css({
+        ctrl_close=$('<span>').appendTo(dialog);
+        ctrl_close.css({
             'display':'inline-block',
             'position':'absolute',
-            'width':'20px',
-            'height':'20px',
+            'width':'28px',
+            'height':'29px',
             'cursor':'pointer',
-            'right':'0',
+            'right':'-14px',
             'top':'0',
-            'background':'url("./imgview.png")',
-            'background-position':'-235px -96px'
+            'background':'url("./images/close_1.png") no-repeat'
         });
 
         loading=$('<img>').appendTo(view);
@@ -356,13 +352,13 @@
             'margin-left':'-30px',
             'display':'none'
         });
-        loading.prop('src','./load.gif');
+        loading.prop('src','./images/load.gif');
 
 
     }
     function handerImgRecover(){
         //重新调整到初始位置
-        img.css({
+        imgDom.css({
             'max-height':'100%',
             'max-width':'100%',
             'margin-left':'0',
@@ -370,11 +366,11 @@
             'height':'initial'
         });
         //改变宽高之后才能算出正确的 margin-top
-        img.css({
+        imgDom.css({
             'margin-top':calcuImgTop()
         });
         weight=1;
-        fnRotateScale(img[0],rotate=0);
+        fnRotateScale(imgDom[0],rotate=0);
     }
     var _is_init = false;
     function init(){
@@ -389,6 +385,10 @@
 
     //应该是load img   load完了应该才是 showimg
     function showImg(index){
+        if(!imgs[index]){
+            return false;
+        }
+
         handerImgRecover();
         //判断左右两个按钮
         if(imgs.length == 0){
@@ -413,9 +413,9 @@
         if(imgs.length){
             loading.show();
         }
-        img.hide();
+        imgDom.hide();
         onSwitch(index);
-        image.src = imgs[index];
+        imageObj.src = imgs[index];
         return true;
 
     }
@@ -461,9 +461,6 @@
 
     //自动定义
     $('body').on('click','.imgView .imgView_item',function (){
-        alert(1);
-
-
         init();
         imgs = [];
         $.each($(this).parent().children(),function (i){
@@ -471,7 +468,6 @@
         });
         showImg(index=$(this).index());
     });
-
 
 
 });

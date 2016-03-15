@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>图片插件</title>
-    <script type="text/javascript" src="jquery-2.1.4.js"></script>
-    <script type="text/javascript" src="imgview.js"></script>
+
     <style>
         .imgView img {width: 200px;}
     </style>
@@ -12,14 +11,14 @@
 <body>
 
 <div class="imgView">
-    <img class="imgView_item" src="./img/1.jpg" />
-    <img class="imgView_item" src="./img/2.jpg" />
-    <img class="imgView_item" src="./img/3.jpg" />
+    <img class="imgView_item" imgViewSrc="./img/1.jpg" src="./img/1.jpg" />
+    <img class="imgView_item" imgViewSrc="./img/2.jpg" src="./img/2.jpg" />
+    <img class="imgView_item" imgViewSrc="./img/3.jpg" src="./img/3.jpg" />
 </div>
-
 <button class="button">按钮</button>
 
-
+<script type="text/javascript" src="jquery-2.1.4.js"></script>
+<script type="text/javascript" src="imgview.js"></script>
 <script type="text/javascript">
     $('.button').click(function (){
         $.imgView({
@@ -30,9 +29,15 @@
                 'img/4.jpg',
                 'img/5.jpg',
                 'img/6.jpg'
-            ]
+            ],
+            infoDom:null,
+            zoom:null,
+            onSwitch:function(i){
+                console.log(i);
+            }
         });
     });
+
 
 </script>
 </body>
