@@ -336,8 +336,8 @@
         ctrl_close.css({
             'display':'inline-block',
             'position':'absolute',
-            'width':'28px',
-            'height':'29px',
+            'width':'30px',
+            'height':'30px',
             'cursor':'pointer',
             'right':'-14px',
             'top':'0',
