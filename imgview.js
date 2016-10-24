@@ -146,11 +146,13 @@
 
         imgDom.bind('mousewheel', function(event) {
             event.preventDefault();
-            if(event.deltaY===1){
+            var direction = event.originalEvent.wheelDelta;
+
+            if(direction  == 120){
                 if(weight<maxWeight){
                     weight+=0.1;
                 }
-            }else{
+            }else if(direction  == -120){
                 if(weight>0.5){
                     weight-=0.1;
                 }
