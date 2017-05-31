@@ -5,7 +5,7 @@
 
 123
 
-[img的readme](./img/readme.md)
+[img的readme](./img/README.md)
 - 1
 - 2
 -3
